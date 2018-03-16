@@ -50,19 +50,19 @@ module.exports = {
 
 |参数名   |默认值   |描述    |
 |--------|--------|---|
-|APIBUS_REDIS_HOST| |Redis服务器主机地址|
+|APIBUS_REDIS_HOST|127.0.0.1|Redis服务器主机地址|
 |APIBUS_REDIS_PORT|6379|Redis服务器主机端口|
 |APIBUS_REDIS_PASSWORD| |Redis服务器密码|
 |APIBUS_REDIS_NUMBER|0|Redis数据库编号|
-|APIBUS_MYSQL_HOST| |Mysql服务器主机地址|
+|APIBUS_MYSQL_HOST|127.0.0.1|Mysql服务器主机地址|
 |APIBUS_MYSQL_PORT|3306|Mysql服务器主机端口|
-|APIBUS_MYSQL_USER| |Mysql数据库账号|
+|APIBUS_MYSQL_USER|root|Mysql数据库账号|
 |APIBUS_MYSQL_PASSWORD| |Mysql数据库密码|
 |APIBUS_MYSQL_DBNAME|apibus|Mysql数据库名称|
 |APIBUS_MYSQL_POOLSIZE|8|Mysql数据库连接池大小|
 |APIBUS_CLUSTER_TOKEN| |多云间通信token|
 |APIBUS_CLUSTER_MANAGER| |当前节点是否管理节点，```true```为是。|
-|APIBUS_CLUSTER_NODENAME| |当前节点名称|
+|APIBUS_CLUSTER_NODENAME|master|当前节点名称|
 |APIBUS_ADMIN_APPKEY|0|用于管理的appkey|
 |APIBUS_ADMIN_SECRET|0|用于管理的secret|
 
