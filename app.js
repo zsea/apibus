@@ -48,9 +48,10 @@ app.use(cors({
     allowHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
-//var bodyParser = require('koa-bodyparser');
-var body = require('koa-better-body')
-app.use(body(cfg.BODY));
+var bodyParser = require('koa-bodyparser');
+app.use(bodyParser(cfg.BODY));
+//var body = require('koa-better-body')
+//app.use(body(cfg.BODY));
 
 const crypto = require('crypto');
 const common_fields = ['appkey', 'time', 'signature', 'method', 'version', 'session', 'format', 'sign_method', 'ignore_fields'];
@@ -88,12 +89,14 @@ app.use(async function (ctx, next) {
         ctx.body = { error_response: { code: 9, msg: 'Http Action Not Allowed' } };
         return;
     }
-    //console.log(ctx.req.client.remoteAddress);
-    const form = ctx.request.fields || ctx.request.body || ctx.request.files || {};
+    //console.log(ctx.request.body);
+    //const form = ctx.request.fields || ctx.request.body || ctx.request.files || {};
+    const form = ctx.request.body;
     var api_method = form['method'], appkey = form['appkey']
         , signature = form['signature'], timestamp = form['time'], version = form['version']
         , format = form['format'], sign_method = form['sign_method'], session = form['session']
         , request_mode = form["request_mode"];
+    //logger.trace("请求", api_method);
     if (request_mode === null || request_mode === undefined || request_mode === "") {
         request_mode = "proxy";
     }

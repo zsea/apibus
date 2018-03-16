@@ -16,7 +16,7 @@ module.exports = {
         database: process.env["APIBUS_MYSQL_DBNAME"] || "apibus",
         connectionLimit: process.env["APIBUS_MYSQL_POOLSIZE"] || 8
     },
-    BODY: {}//bodyParse转换配置，详见：koa-better-body说明
+    BODY: {}//bodyParse转换配置，详见：bodyparser说明
     , ADMIN: {
         APPKEY: process.env["APIBUS_ADMIN_APPKEY"] || 0,
         SECRET: process.env["APIBUS_ADMIN_SECRET"] || 0
