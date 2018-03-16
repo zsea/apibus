@@ -1,6 +1,6 @@
 {
-  "name": "ApiBusV4",
-  "version": "1.0.0",
+  "name": "apibus",
+  "version": "4.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
