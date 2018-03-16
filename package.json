@@ -1,0 +1,23 @@
+{
+  "name": "ApiBusV4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "ioredis": "^3.2.2",
+    "koa": "^2.5.0",
+    "koa-better-body": "^3.0.4",
+    "koa2-cors": "^2.0.5",
+    "log4js": "^2.5.3",
+    "moment": "^2.21.0",
+    "node-fetch": "^2.1.1",
+    "zsea-mysql": "^0.0.4"
+  }
+}
