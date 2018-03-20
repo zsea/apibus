@@ -42,7 +42,12 @@ module.exports = {
         TOKEN: "1",
         MANAGER: true,
         NODENAME: "master"
+    },
+    REQUEST_LOG: {
+        HANDLER: process.env["APIBUS_LOG_HANDLER"] || "none" //可选值:none/fetch/redis
+        , URL: process.env["APIBUS_LOG_URL"] //当处理器为fetch时，该值必填
     }
+    , RUN_LOG_LEVEL: process.env["APIBUS_RUN_LOG_LEVEL"] || "ERROR"
 }
 ```
 
@@ -65,6 +70,9 @@ module.exports = {
 |APIBUS_CLUSTER_NODENAME|master|当前节点名称|
 |APIBUS_ADMIN_APPKEY|0|用于管理的appkey|
 |APIBUS_ADMIN_SECRET|0|用于管理的secret|
+|APIBUS_LOG_HANDLER|none|请求的日志处理器，可选项：none/fetch/redis|
+|APIBUS_LOG_URL| |若日志处理器为fetch，此参数指定接受日志的服务器URL|
+|APIBUS_RUN_LOG_LEVEL|ERROR|运行日志级别，请参考log4js|
 
 **注意**
 
@@ -77,3 +85,47 @@ module.exports = {
 总纲[dev.md](./dev.md)
 
 数据库创建[sql.md](./sql.md)
+
+## 请求日志
+
+### 日志类别 
+
+请求日志配置参数包括：none/fetch/redis
+
+#### none
+
+不记录日志
+
+#### fetch
+
+将日志转发到一个URL进行处理，
+
+#### redis
+
+将日志数据存储到apibus相同redis数据库的apibus:logs的list中。
+
+### 日志格式
+
+```json
+{
+  "request": {
+    "version": 4,
+    "appkey": "0",
+    "time": 1521518106,
+    "method": "apibus.time.get",
+    "format": "json",
+    "sign_method": "md5",
+    "signature": "f01c24e6bb857e5c994d2d78fa687313"
+  },
+  "response": {
+    "apibus_time_get_response": {
+      "time": 1521518106913,
+      "node": "master"
+    },
+    "request_id": "uocxvvqrjz7huhrh4snss3pmmwgmzr9n"
+  },
+  "request_id": "uocxvvqrjz7huhrh4snss3pmmwgmzr9n",
+  "user_ip": "::ffff:127.0.0.1"
+}
+```
+**注意**,fetch类别的日志在请求header中设置```"Content-Type": "application/json"```。

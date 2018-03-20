@@ -2,8 +2,9 @@ global.Promise = require("bluebird");
 var cfg = require("./configure/cfg");
 var log4js = require("log4js");
 var logger = log4js.getLogger("APIBus");
-logger.level = process.env['logLevel'] || "trace"
+logger.level = cfg.RUN_LOG_LEVEL;
 
+const idCreate = require("./lib/id");
 
 var Redis = require("ioredis");
 var redis = new Redis(cfg.REDIS);
@@ -84,6 +85,72 @@ function sign(appSecret, options, isv_fields) {
     sign = sign.toUpperCase();
     return sign;
 }
+
+app.use(async function (ctx, next) {
+    //console.log("test");
+    await next();
+    const form = ctx.request.body;
+    if (form["version"] == 4.0 && form["method"]) {
+        var v = {}
+        if (!ctx.body.error_response) {
+            var root = form.method.replace(/\./ig, "_");
+            root = root + "_response";
+            v[root] = ctx.body;
+        }
+        else {
+            v = ctx.body;
+        }
+
+
+        if (cfg.REQUEST_LOG.HANDLER == "redis") {
+            v["request_id"] = idCreate();
+            let userip = ctx.req.headers["apibus-user-ip"] || ctx.req.client.remoteAddress;
+            redis.lpush("apibus:logs", JSON.stringify({
+                request: form,
+                response: v,
+                request_id: v["request_id"],
+                user_ip: userip
+            }));
+        }
+        else if (cfg.REQUEST_LOG.HANDLER == "fetch") {
+            v["request_id"] = idCreate();
+            let userip = ctx.req.headers["apibus-user-ip"] || ctx.req.client.remoteAddress;
+            fetch(cfg.REQUEST_LOG.URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    request: form,
+                    response: v,
+                    request_id: v["request_id"],
+                    user_ip: userip
+                })
+            }).then(function (res) {
+                if (res.status != 200) {
+                    logger.warn("日志服务出错，HttpStatus", res.status);
+                }
+                return res.text();
+            }).then(function (txt) {
+                let ret = undefined;
+                try {
+                    ret = JSON.parse(txt);
+                }
+                catch (e) {
+                    logger.error("日志服务响应错误", txt);
+                    return;
+                }
+                if (!ret.success) {
+                    logger.warn("日志服务响应错误", JSON.stringify(ret, null, 4));
+                }
+            }).catch(function (e) {
+                logger.error("日志服务发生未知错误", e);
+            });
+        }
+
+        ctx.body = v;
+    }
+})
 app.use(async function (ctx, next) {
     if (ctx.method != "POST") {
         ctx.body = { error_response: { code: 9, msg: 'Http Action Not Allowed' } };
@@ -100,7 +167,7 @@ app.use(async function (ctx, next) {
     if (request_mode === null || request_mode === undefined || request_mode === "") {
         request_mode = "proxy";
     }
-    if (format != 'json' && format != 'xml') {
+    if (format != 'json') {
         logger.trace('format is:' + format);
         ctx.body = { error_response: { code: 23, msg: 'Invalid Format' } };
         return;
@@ -399,7 +466,6 @@ app.use(async function (ctx, next) {
         }
         let response = await fetch(redirect_url || apiinfo.handler.value, {
             method: "POST",
-            mode: 'cors',
             headers: {
                 "APIBUS-USER-IP": userip,
                 "Content-Type": "application/json"

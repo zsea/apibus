@@ -25,5 +25,10 @@ module.exports = {
         TOKEN: process.env["APIBUS_CLUSTER_TOKEN"],
         MANAGER: process.env["APIBUS_CLUSTER_MANAGER"] == "true",
         NODENAME: process.env["APIBUS_CLUSTER_NODENAME"] || "master"
+    },
+    REQUEST_LOG: {
+        HANDLER: process.env["APIBUS_LOG_HANDLER"] || "none" //可选值:none/fetch/redis
+        , URL: process.env["APIBUS_LOG_URL"] //当处理器为fetch时，该值必填
     }
+    , RUN_LOG_LEVEL: process.env["APIBUS_RUN_LOG_LEVEL"] || "ERROR"
 }

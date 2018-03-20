@@ -46,9 +46,9 @@
 |[*]time |Number |请求发起的时间，使用Unix格式时间。和服务器时间误差大于10分钟的调用将被判定为无效。|
 |[*]signature |string |参数签名。 |
 |[*]method |string |调用的API方法。|
-|[*]version |Number |协议版本号。目前仅支持3.0。|
+|[*]version |Number |协议版本号。目前仅支持3.0与4.0，其中3.0就原始后端返回的值，4.0添加了日志id信息。|
 |session |string |若调用的api需要用户授权，则此参数必传。|
-|[*]format |string |响应格式。可选值：json，jsonp。|
+|[*]format |string |响应格式。可选值：json。|
 |[*]sign_method |string |签名方法。目前仅支持md5。|
 |ignore_fields|string |忽略签名的字段，多个字段用英文逗分隔，忽略的参数不能是业务参数和公共参数。主要用于jsonp中调用时，防止数据被浏览器缓存。 |
 |request_mode|string |当接口不在当前环境下时的请求方式：proxy/redirect。proxy由当前apibus去请求下一级APIBus地址，redirect会返回一相错误信息，由客户端自行重新访问。默认为proxy|
@@ -62,6 +62,10 @@
 |  参数名     | 数据类型    | 描述    |
 |------------|------------|--------|
 |session  |string |授权用户的用户信息。 |
+
+在接口后端中，session参数会转换为设置session时的值，即调用接口```apibus.session.create```设置的参数```value```的值。
+
+**注意** 在后端的http头中，添加了```APIBUS-USER-IP```，传入前端调用接口者的IP地址。
 
 #### 错误响应
 
