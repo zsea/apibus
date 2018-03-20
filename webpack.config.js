@@ -5,11 +5,11 @@ module.exports = function (configs, webpack, ctx) {
     //configs.target = "electron-renderer"
     //configs.externals["antd"]="ANTD"
     //configs.externals["react-router-dom"]="ReactRouterDOM"
-    /*configs.externals = {
+    configs.externals = {
         'react': 'React'
         , 'react-dom': 'ReactDOM'
         , 'react-router-dom': 'ReactRouterDOM'
-    }*/
+    }
     //console.log(configs.externals);
     //configs.externals = {}
     //console.log(ctx);
