@@ -6,9 +6,9 @@ module.exports = function (configs, webpack, ctx) {
     //configs.externals["antd"]="ANTD"
     //configs.externals["react-router-dom"]="ReactRouterDOM"
     configs.externals = {
-        'react': 'React'
+        /*'react': 'React'
         , 'react-dom': 'ReactDOM'
-        , 'react-router-dom': 'ReactRouterDOM'
+        , 'react-router-dom': 'ReactRouterDOM'*/
     }
     //console.log(configs.externals);
     //configs.externals = {}
