@@ -1,0 +1,31 @@
+{
+  "name": "apibus.ui",
+  "version": "4.0.0",
+  "description": "APIBus管理工具",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "dn test && dn build -e prod"
+  },
+  "author": {
+    "name": "zsea",
+    "email": "zsea@qq.com",
+    "url": "https://github.com/zsea/apibus"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "antd": "^3.2.1",
+    "babel-plugin-import": "^1.6.3",
+    "babel-polyfill": "^6.26.0",
+    "bundle-loader": "^0.5.5",
+    "chalk": "^2.3.1",
+    "escape-string-regexp": "^1.0.5",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "dependencies": {
+    "echarts": "^3.8.5",
+    "history": "^4.7.2",
+    "moment": "^2.20.1",
+    "react-router-dom": "^4.2.2"
+  }
+}
