@@ -51,7 +51,7 @@
 |[*]format |string |响应格式。可选值：json。|
 |[*]sign_method |string |签名方法。目前仅支持md5。|
 |ignore_fields|string |忽略签名的字段，多个字段用英文逗分隔，忽略的参数不能是业务参数和公共参数。主要用于jsonp中调用时，防止数据被浏览器缓存。 |
-|request_mode|string |当接口不在当前环境下时的请求方式：proxy/redirect。proxy由当前apibus去请求下一级APIBus地址，redirect会返回一相错误信息，由客户端自行重新访问。默认为proxy|
+|request_mode|string |当接口不在当前环境下时的请求方式：proxy/redirect。proxy由当前apibus去请求下一级APIBus地址，redirect会返回一相应错误信息，由客户端自行重新访问。默认为proxy|
 
 *   带星号标记的参数为必填参数。
 

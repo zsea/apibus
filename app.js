@@ -85,7 +85,19 @@ function sign(appSecret, options, isv_fields) {
     sign = sign.toUpperCase();
     return sign;
 }
-
+function byteLength(str) {
+    if (!str) return 0;
+    var len = 0;
+    for (var i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) > 255) {
+            len += 2;
+        }
+        else {
+            len += 1;
+        }
+    }
+    return len;
+}
 app.use(async function (ctx, next) {
     //console.log("test");
     await next();
@@ -163,7 +175,8 @@ app.use(async function (ctx, next) {
         , signature = form['signature'], timestamp = form['time'], version = form['version']
         , format = form['format'], sign_method = form['sign_method'], session = form['session']
         , request_mode = form["request_mode"];
-    //logger.trace("请求", api_method);
+    logger.trace("请求", api_method);
+    logger.trace("入参", JSON.stringify(form, null, 4));
     if (request_mode === null || request_mode === undefined || request_mode === "") {
         request_mode = "proxy";
     }
@@ -318,6 +331,7 @@ app.use(async function (ctx, next) {
     for (var i = 0; i < apiinfo.fields.length; i++) {
         var field = apiinfo.fields[i];
         var value = form[field.name];
+        //logger.trace("参数",field.name,value,form)
         if (field.required && (value === null || value === undefined)) {
             ctx.body = {
                 error_response: {
@@ -378,21 +392,21 @@ app.use(async function (ctx, next) {
                 return;
             }
         }
-        if (field.type == 'string') {
-            if (field.maxlength) {
-                if (field.maxlength < byteLength(value)) {
+        if (field.type == 'string' || field.type == "json" || field.type == "json-array") {
+            if (field.maxLength) {
+                if (field.maxLength < byteLength(value)) {
                     ctx.body = {
                         error_response: {
                             code: 43, msg: 'Parameter Error'
                             , sub_code: 'ise.parameter-error-maxlength:' + field.name
-                            , sub_msg: '参数' + field.name + '的最大长度不能大于' + field.maxlength + '个字符。'
+                            , sub_msg: '参数' + field.name + '的最大长度不能大于' + field.maxLength + '个字节。'
                         }
                     };
                     return;
                 }
             }
         }
-        else if (field.type == "enum") {
+        if (field.type == "enum") {
             var list_enums = (field.list || '').split(',');
             if (!list_enums.some(function (_item) {
                 return _item == value
@@ -401,7 +415,7 @@ app.use(async function (ctx, next) {
                     error_response: {
                         code: 43, msg: 'Parameter Error'
                         , sub_code: 'ise.parameter-error-range:' + field.name
-                        , sub_msg: '参数' + field.name + '的值必须必于集合[' + field.list + ']'
+                        , sub_msg: '参数' + field.name + '的值必须属于集合[' + field.list + ']'
                     }
                 };
                 return;
