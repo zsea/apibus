@@ -119,7 +119,8 @@ const ApiForm = Form.create()(class extends React.Component {
                             required: true,
                             message: '请填写处理器。'
                         }, {
-                            type: "url",
+                            type: "string",
+                            pattern: /^http(s{0,1}):\/\//ig,
                             message: '不是有效的网址格式。'
                         }],
                         initialValue: this.state.initValue["url"]
