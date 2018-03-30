@@ -468,7 +468,10 @@ app.use(async function (ctx, next) {
     }
     else if (apiinfo.handler.type == "url") {
         let body = "";
-        if (user_token) {
+        if (redirect_url) {
+            body = JSON.stringify(form);
+        }
+        else if (user_token) {
             body = JSON.stringify(Object.assign({}, form, { session: JSON.stringify(user_token.value) }));
         }
         else {
