@@ -171,6 +171,7 @@ app.use(async function (ctx, next) {
     //console.log(ctx.request.body);
     //const form = ctx.request.fields || ctx.request.body || ctx.request.files || {};
     const form = ctx.request.body;
+    const _origin_form = Object.assign({}, form);
     var api_method = form['method'], appkey = form['appkey']
         , signature = form['signature'], timestamp = form['time'], version = form['version']
         , format = form['format'], sign_method = form['sign_method'], session = form['session']
@@ -420,6 +421,7 @@ app.use(async function (ctx, next) {
         else if (field.type == "json") {
             try {
                 var test_v = JSON.parse(value);
+                form[field.name] = test_v;
             }
             catch (e) {
                 ctx.body = {
@@ -435,6 +437,7 @@ app.use(async function (ctx, next) {
         else if (field.type == "json-array") {
             try {
                 var test_v = JSON.parse(value);
+                form[field.name] = test_v;
             }
             catch (e) {
                 ctx.body = {
@@ -469,7 +472,7 @@ app.use(async function (ctx, next) {
     else if (apiinfo.handler.type == "url") {
         let body = "";
         if (redirect_url) {
-            body = JSON.stringify(form);
+            body = JSON.stringify(_origin_form);
         }
         else if (user_token) {
             body = JSON.stringify(Object.assign({}, form, { session: JSON.stringify(user_token.value) }));
