@@ -69,10 +69,17 @@ function ApiBus(appkey, secret, url) {
             var v = options[key];
             if (v === null || v === undefined || v === '' || key == 'signature')
                 continue;
-            kv.push(key + '=' + options[key].toString());
+            if (typeof v === "object") {
+                kv.push(key + '=' + JSON.stringify(options[key]));
+            }
+            else {
+                kv.push(key + '=' + options[key].toString());
+            }
+
         }
         kv = kv.sort();
         var s = kv.join('&') + secret;
+        console.log(s);
         options['signature'] = md5(s);
         return options;
     }
