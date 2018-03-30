@@ -285,12 +285,8 @@ app.use(async function (ctx, next) {
     }
     var user_token = null;
     if (session) {
-        user_token = await memory.get_user(session);
+        user_token = await memory.get_user(session, appkey);
         if (!user_token) {
-            ctx.body = { error_response: { code: 27, msg: 'Invalid Session' } };
-            return;
-        }
-        if (user_token.appkey != appkey) {
             ctx.body = { error_response: { code: 27, msg: 'Invalid Session' } };
             return;
         }
@@ -473,7 +469,7 @@ app.use(async function (ctx, next) {
     else if (apiinfo.handler.type == "url") {
         let body = "";
         if (user_token) {
-            body = JSON.stringify(Object.assign({}, form, { session: user_token }));
+            body = JSON.stringify(Object.assign({}, form, { session: JSON.stringify(user_token.value) }));
         }
         else {
             body = JSON.stringify(form);
