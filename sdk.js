@@ -1,5 +1,13 @@
 import md5 from "./md5"
 var cached = {};
+function assign() {
+    let obj = arguments[0];
+    for (var i = 1; i < arguments.length; i++) {
+        for (var key in arguments[i]) {
+            obj[key] = arguments[i][key];
+        }
+    }
+}
 function Request(opt, url) {
     return fetch(url, {
         method: "POST",
@@ -44,7 +52,7 @@ function Request(opt, url) {
 function ApiBus(appkey, secret, url) {
     url = url || 'http://apibus.tao11.la';
     this.Execute = function (method, options) {
-        var opt = Object.assign({}, options);
+        var opt = assign({}, options);
         opt['appkey'] = appkey;
         opt['time'] = parseInt(Date.now() / 1000);
         opt['method'] = opt['method'] || method;
