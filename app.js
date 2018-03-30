@@ -492,15 +492,14 @@ app.use(async function (ctx, next) {
             ctx.body = { error_response: { code: 10, msg: 'Service Currently Unavailable', sub_code: 'isp.remote-service-error', sub_msg: '连接远程服务错误' } };
             return;
         }
-        var res_text = await response.text();
         try {
-            JSON.parse(res_text);
+            ctx.body = await response.json();
         }
         catch (e) {
             ctx.body = { error_response: { code: 10, msg: 'Service Currently Unavailable', sub_code: 'isp.apibus-parse-error', sub_msg: 'api解析错误（出现了未被明确控制的异常信息）' } };
             return;
         }
-        ctx.body = res_text;
+
     }
     else {
         ctx.body = { error_response: { code: 22, msg: 'Invalid Method' } }
