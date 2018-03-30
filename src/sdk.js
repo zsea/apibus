@@ -1,13 +1,6 @@
 import md5 from "./md5"
 var cached = {};
-function assign() {
-    let obj = arguments[0];
-    for (var i = 1; i < arguments.length; i++) {
-        for (var key in arguments[i]) {
-            obj[key] = arguments[i][key];
-        }
-    }
-}
+
 function Request(opt, url) {
     return fetch(url, {
         method: "POST",
@@ -52,7 +45,7 @@ function Request(opt, url) {
 function ApiBus(appkey, secret, url) {
     url = url || 'http://apibus.tao11.la';
     this.Execute = function (method, options) {
-        var opt = assign({}, options);
+        var opt = Object.assign({}, options);
         opt['appkey'] = appkey;
         opt['time'] = parseInt(Date.now() / 1000);
         opt['method'] = opt['method'] || method;
@@ -62,7 +55,16 @@ function ApiBus(appkey, secret, url) {
         opt["request_mode"] = "redirect"
         opt = Signature(opt, secret);
         var _url = cached[method] || url;
-        return Request(opt, _url);
+        return Request(opt, _url).catch(function (e) {
+            return {
+                error_response: {
+                    code: 10,
+                    msg: 'Service Currently Unavailable',
+                    sub_code: 'isp.remote-connection-error',
+                    sub_msg: '远程连接错误'
+                }
+            }
+        });
     }
     function Signature(options, secret) {
 
@@ -71,7 +73,12 @@ function ApiBus(appkey, secret, url) {
             var v = options[key];
             if (v === null || v === undefined || v === '' || key == 'signature')
                 continue;
-            kv.push(key + '=' + options[key].toString());
+            if (typeof v === "object") {
+                kv.push(key + '=' + JSON.stringify(options[key]));
+            }
+            else {
+                kv.push(key + '=' + options[key].toString());
+            }
         }
         kv = kv.sort();
         var s = kv.join('&') + secret;
@@ -89,4 +96,4 @@ function ApiBus(appkey, secret, url) {
     });
 }
 
-module.exports = ApiBus;
+export default ApiBus;

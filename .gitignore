@@ -1,5 +1,5 @@
+*.log
 .DS_Store
-node_modules
-npm-debug.log
-tmp
-yarn-error.log
+node_modules/
+.nyc_output/
+coverage/
