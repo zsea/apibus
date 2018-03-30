@@ -488,6 +488,7 @@ class App extends React.Component {
 
         this.onTitle = this.onTitle.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
+        this.Load = this.Load.bind(this);
     }
     currentData = { pagination: { current: 1 }, filters: {}, sorter: {} }
     async Load(pagination, filters, sorter) {
@@ -580,6 +581,12 @@ class App extends React.Component {
                 dataSource={this.state.apps}
                 loading={this.state.loading}
                 rowKey="appkey"
+                onChange={this.Load}
+                pagination={{
+                    pageSize: size,
+                    total: this.state.total,
+                    showTotal: (total, range) => `共有数据${total}条。`
+                }}
             >
                 <Table.Column title="名称" key="name" dataIndex="name" />
                 <Table.Column title="app key" key="appkey" dataIndex="appkey" />
