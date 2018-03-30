@@ -23,7 +23,6 @@
     "react-dom": "^16.2.0"
   },
   "dependencies": {
-    "echarts": "^3.8.5",
     "history": "^4.7.2",
     "moment": "^2.20.1",
     "react-router-dom": "^4.2.2"
