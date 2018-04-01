@@ -107,8 +107,11 @@ app.use(async function (ctx, next) {
         if (!ctx.body.error_response) {
             var root = form.method.replace(/\./ig, "_");
             root = root + "_response";
-            if (v[root] === undefined) {
+            if (ctx.body[root] === undefined) {
                 v[root] = ctx.body;
+            }
+            else{
+                v = ctx.body;
             }
         }
         else {
