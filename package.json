@@ -12,6 +12,7 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "ioredis": "^3.2.2",
+    "json-bigint": "^0.2.3",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa2-cors": "^2.0.5",

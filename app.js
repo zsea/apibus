@@ -1,3 +1,4 @@
+global.JSON=require('json-bigint');
 global.Promise = require("bluebird");
 var cfg = require("./configure/cfg");
 var log4js = require("log4js");
