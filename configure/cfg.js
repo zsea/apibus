@@ -31,4 +31,5 @@ module.exports = {
         , URL: process.env["APIBUS_LOG_URL"] //当处理器为fetch时，该值必填
     }
     , RUN_LOG_LEVEL: process.env["APIBUS_RUN_LOG_LEVEL"] || "ERROR"
+    , FORWARD_MAX_TIMES:process.env["FORWARD_MAX_TIMES"]||5 //调用接口失败时最大重试次数
 }

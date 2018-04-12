@@ -73,6 +73,8 @@ module.exports = {
 |APIBUS_LOG_HANDLER|none|请求的日志处理器，可选项：none/fetch/redis|
 |APIBUS_LOG_URL| |若日志处理器为fetch，此参数指定接受日志的服务器URL|
 |APIBUS_RUN_LOG_LEVEL|ERROR|运行日志级别，请参考log4js|
+|FORWARD_MAX_TIMES|5|发生网络错误时，内部服务器请求的最大次数。|
+|APIBUS_PORT|3000|APIBUS服务器侦听的网络端口。|
 
 **注意**
 

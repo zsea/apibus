@@ -1,4 +1,4 @@
-global.JSON=require('json-bigint');
+global.JSON = require('json-bigint');
 global.Promise = require("bluebird");
 var cfg = require("./configure/cfg");
 var log4js = require("log4js");
@@ -111,7 +111,7 @@ app.use(async function (ctx, next) {
             if (ctx.body[root] === undefined) {
                 v[root] = ctx.body;
             }
-            else{
+            else {
                 v = ctx.body;
             }
         }
@@ -486,15 +486,24 @@ app.use(async function (ctx, next) {
         else {
             body = JSON.stringify(form);
         }
-        let response = await fetch(redirect_url || apiinfo.handler.value, {
-            method: "POST",
-            headers: {
-                "APIBUS-USER-IP": userip,
-                "Content-Type": "application/json"
-            },
-            body: body
-        });
-        if (response.status != 200) {
+        let response = null, request_times = 0;
+        while (request_times++ < cfg.FORWARD_MAX_TIMES) {
+            try {
+                response = await fetch(redirect_url || apiinfo.handler.value, {
+                    method: "POST",
+                    headers: {
+                        "APIBUS-USER-IP": userip,
+                        "Content-Type": "application/json"
+                    },
+                    body: body
+                });
+                break;
+            }
+            catch (e) {
+                continue;
+            }
+        }
+        if (!response || response.status != 200) {
             ctx.body = { error_response: { code: 10, msg: 'Service Currently Unavailable', sub_code: 'isp.remote-service-error', sub_msg: '连接远程服务错误' } };
             return;
         }
