@@ -1,10 +1,10 @@
 import md5 from "./md5"
 var cached = {};
 
-function Request(opt, url) {
+function Request(opt, url, jsoner) {
     return fetch(url, {
         method: "POST",
-        body: JSON.stringify(opt),
+        body: jsoner.stringify(opt),
         headers: {
             "Content-Type": "application/json"
         }
@@ -22,7 +22,8 @@ function Request(opt, url) {
             })
         }
         try {
-            return response.json();
+            var txt = response.text();
+            return jsoner.parser(txt);
         } catch (e) {
             resolve({
                 error_response: {
@@ -42,7 +43,8 @@ function Request(opt, url) {
         return response;
     });
 }
-function ApiBus(appkey, secret, url) {
+function ApiBus(appkey, secret, url, jsoner) {
+    jsoner = jsoner || window.JSON;
     url = url || 'http://apibus.tao11.la';
     this.Execute = function (method, options) {
         var opt = Object.assign({}, options);
@@ -55,7 +57,7 @@ function ApiBus(appkey, secret, url) {
         opt["request_mode"] = "redirect"
         opt = Signature(opt, secret);
         var _url = cached[method] || url;
-        return Request(opt, _url).catch(function (e) {
+        return Request(opt, _url, jsoner).catch(function (e) {
             return {
                 error_response: {
                     code: 10,
