@@ -1,6 +1,14 @@
 import Apibus from "../src/sdk";
 
-let bus = new Apibus(0, 0, "http://127.0.0.1:3000");
+let bus = new Apibus(0, 0, "https://apibus.tao11.la/",{
+    parse:function(txt){
+        alert(txt);
+        return JSON.parse(txt);
+    },
+    stringify:function(obj){
+        return JSON.stringify(obj);
+    }
+});
 bus.Execute("apibus.time.get").then(function (res) {
     console.log(res);
 });

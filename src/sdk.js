@@ -21,19 +21,18 @@ function Request(opt, url, jsoner) {
                 });
             })
         }
-        try {
-            var txt = response.text();
-            return jsoner.parser(txt);
-        } catch (e) {
-            resolve({
+        return response.text().then(function (txt) {
+            return jsoner.parse(txt);
+        }).catch(function (e) {
+            return {
                 error_response: {
                     code: 10,
                     msg: 'Service Currently Unavailable',
                     sub_code: 'isp.apibus-parse-error',
                     sub_msg: 'api解析错误（出现了未被明确控制的异常信息）'
                 }
-            });
-        }
+            };
+        });
     }).then(function (response) {
         //console.log("响应",JSON.stringify(response, null, 4));
         if (response.error_response && response.error_response.code == 52) {
