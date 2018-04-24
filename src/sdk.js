@@ -2,7 +2,6 @@ import md5 from './md5';
 let cached = {};
 
 function Request(opt, url, jsoner) {
-  console.log("开始请求",url);
   return fetch(url, {
     method: 'POST',
     body: jsoner.stringify(opt),
