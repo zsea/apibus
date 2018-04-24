@@ -1,6 +1,6 @@
 import Apibus from "../src/sdk";
 
-let bus = new Apibus(0, 0, "https://apibus.tao11.la/",{
+let bus = new Apibus(0, "0", "https://apibus.tao11.la/",{
     parse:function(txt){
         alert(txt);
         return JSON.parse(txt);
@@ -9,6 +9,6 @@ let bus = new Apibus(0, 0, "https://apibus.tao11.la/",{
         return JSON.stringify(obj);
     }
 });
-bus.Execute("apibus.time.get").then(function (res) {
+bus.Execute("taobao.shop.get",{nick:"ddd"}).then(function (res) {
     console.log(res);
 });

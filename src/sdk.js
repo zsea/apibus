@@ -2,6 +2,7 @@ import md5 from './md5';
 let cached = {};
 
 function Request(opt, url, jsoner) {
+  console.log("开始请求",url);
   return fetch(url, {
     method: 'POST',
     body: jsoner.stringify(opt),
@@ -37,7 +38,7 @@ function Request(opt, url, jsoner) {
         //console.log("响应",JSON.stringify(response, null, 4));
     if (response.error_response && response.error_response.code == 52) {
       cached[opt['method']] = response.error_response.location;
-      return Request(opt, response.error_response.location);
+      return Request(opt, response.error_response.location,jsoner);
     }
     return response;
   });

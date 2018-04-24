@@ -1,6 +1,6 @@
 {
   "name": "web-apibus",
-  "version": "4.1.2",
+  "version": "4.1.3",
   "description": "APIBus Javascript实现的SDK，用于浏览器",
   "main": "build/sdk.js",
   "scripts": {
