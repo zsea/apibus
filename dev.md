@@ -52,6 +52,7 @@
 |[*]sign_method |string |签名方法。目前仅支持md5。|
 |ignore_fields|string |忽略签名的字段，多个字段用英文逗分隔，忽略的参数不能是业务参数和公共参数。主要用于jsonp中调用时，防止数据被浏览器缓存。 |
 |request_mode|string |当接口不在当前环境下时的请求方式：proxy/redirect。proxy由当前apibus去请求下一级APIBus地址，redirect会返回一相应错误信息，由客户端自行重新访问。默认为proxy|
+|securty_code|string|特殊接口的安全码。*在公开环境中，某些接口由于安全原因，需要鉴权调用，通过比较此安全码，可以服务器调用。*|
 
 *   带星号标记的参数为必填参数。
 
@@ -103,6 +104,9 @@ API平台错误是主要包含两类错误：
 |32	|Missing Version	|缺少版本参数	 |传入的参数中必需包含version字段。 |
 |33	|Invalid Version	 |非法的版本参数	|用户传入的版本号格式错误，必需为数字格式。
 |34	|Unsupported Version	|不支持的版本号	|用户传入的版本号没有被支持，请使用正确的协议版本号。 |
+|35 |Missing Securty Code   |缺少安全码     |在调用高危接口时，需要传入安全码。                 |
+|36 |Invalid Securty Code   |无效安全码     |在调用高危接口时，传入的安全码错误。|
+|37 |Missing App Securty Code|应用未设置安全码|在调用高危接口时，应用未设置安全码，禁止调用。|
 |40 |Missing Required Arguments |缺少必选参数 |API文档中设置为必选的参数是必传的，请仔细核对文档。 |
 |41 |Invalid Arguments |非法的参数 |参数类型不对，例如：需要传入的是数字类型的，却传入了字符类型的参数。 |
 |42	|Insufficient session permissions	|短授权权限不足	| 调用的是高危API。

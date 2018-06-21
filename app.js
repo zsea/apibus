@@ -181,7 +181,7 @@ app.use(async function (ctx, next) {
     var api_method = form['method'], appkey = form['appkey']
         , signature = form['signature'], timestamp = form['time'], version = form['version']
         , format = form['format'], sign_method = form['sign_method'], session = form['session']
-        , request_mode = form["request_mode"];
+        , request_mode = form["request_mode"], securty_code = form["securty_code"];
     logger.trace("请求", api_method);
     logger.trace("入参", JSON.stringify(form, null, 4));
     if (request_mode === null || request_mode === undefined || request_mode === "") {
@@ -245,6 +245,7 @@ app.use(async function (ctx, next) {
         ctx.body = { error_response: { code: 29, msg: 'Invalid App Key' } };
         return;
     }
+
     //logger.trace("流量检查", appkey)
     if (!(await memory.add_flow(appkey, appinfo.flow))) {
         ctx.body = { error_response: { code: 7, msg: 'App Call Limited' } };
@@ -254,6 +255,20 @@ app.use(async function (ctx, next) {
     if (!apiinfo) {
         ctx.body = { error_response: { code: 22, msg: 'Invalid Method' } };
         return;
+    }
+    if (apiinfo.need_securty) {
+        if (!securty_code) {
+            ctx.body = { error_response: { code: 35, msg: 'Missing Securty Code' } };
+            return;
+        }
+        else if(!appinfo.securty_code){
+            ctx.body = { error_response: { code: 37, msg: 'Missing App Securty Code' } };
+            return;
+        }
+        else if(appinfo.securty_code!=securty_code){
+            ctx.body = { error_response: { code: 36, msg: 'Invalid Securty Code' } };
+            return;
+        }
     }
     let redirect_url;
     if (apiinfo.env && apiinfo.env.name != cfg.CLUSTER.NODENAME) {
