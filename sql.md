@@ -9,6 +9,7 @@ CREATE TABLE `apis` (
   `status` varchar(20) NOT NULL,
   `groupid` int(11) NOT NULL DEFAULT '0',
   `must_session` int(1) NOT NULL DEFAULT '0',
+  `need_securty` int(1) NOT NULL DEFAULT '0',
   `envid` int(11) NOT NULL DEFAULT '0',
   `url` varchar(255) DEFAULT NULL,
   `desc` varchar(5000) DEFAULT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE `apis` (
 CREATE TABLE `apps` (
   `appkey` int(11) NOT NULL AUTO_INCREMENT,
   `secret` varchar(255) DEFAULT NULL,
+  `securty_code` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL COMMENT '应用名称',
   `status` varchar(255) DEFAULT NULL COMMENT 'enable/disable',
   `flow` int(11) NOT NULL DEFAULT '0' COMMENT '每天的流量',
