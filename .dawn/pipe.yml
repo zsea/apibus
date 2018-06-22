@@ -8,6 +8,12 @@ dev:
       ./build/(0).ico: ./src/assets/favicon.ico
   - name: webpack
     watch: true
+    externals:
+      react: React
+      react-dom: ReactDOM
+      antd: antd
+      redux: redux
+      moment: moment
   - name: server
     port: 8888
   - name: browser-sync
@@ -18,6 +24,12 @@ build:
     files:
       (0): ./src/assets/favicon.ico
   - name: webpack
+    externals:
+      react: React
+      react-dom: ReactDOM
+      antd: antd
+      redux: redux
+      moment: moment
 
 add:
   - name: react-component-creator

@@ -184,6 +184,72 @@ class Secret extends React.Component {
         </Spin>
     }
 }
+class SecurtyCode extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = Object.assign({ loading: false }, props);
+    }
+    componentWillReceiveProps(nextProps) {
+        this.setState(nextProps);
+    }
+    render() {
+        return <Spin size="small" spinning={this.state.loading}>
+            {
+                this.state.visible ? this.state.value : "******"
+            }
+            {
+                this.state.visible ? <a href="javascript:;" onClick={() => {
+                    this.setState({ visible: false })
+                }}>&nbsp;隐藏</a> : <a href="javascript:;" onClick={() => {
+                    this.setState({ visible: true })
+                }}>&nbsp;显示</a>
+            }
+            {
+                this.state.visible ? <Tooltip placement="topRight" title="重新生成安全码"><a href="javascript:;" onClick={async () => {
+                    if (!await new Promise(function (resolve, reject) {
+                        Modal.confirm({
+                            title: "请确认",
+                            content: "你确定要生成新的安全码吗？",
+                            onOk: function () {
+                                resolve(true)
+                            },
+                            onCancel: function () {
+                                resolve(false);
+                            }
+                        })
+                    })) {
+                        return;
+                    }
+                    this.setState({ loading: true });
+                    let response = await bus.Execute("apibus.app.code.update", { app: this.state.appkey });
+                    this.setState({ loading: false });
+                    if (response.error_response) {
+                        Modal.error({
+                            title: "错误",
+                            content: response.error_response.sub_msg || response.error_response.msg || "系统错误。"
+                            , okText: "确定"
+                        });
+                    }
+                    this.setState({ loading: true });
+                    let sync_response = await bus.Execute("apibus.app.sync", {
+                        app: this.state.appkey
+                    });
+                    this.setState({ loading: false });
+                    if (sync_response.error_response) {
+                        Modal.error({
+                            title: "错误",
+                            content: sync_response.error_response.sub_msg || sync_response.error_response.msg || "系统错误。"
+                            , okText: "确定"
+                        });
+                        return;
+                    }
+                    this.setState({ value: response.value, visible: false });
+                }}>&nbsp;<Icon type="retweet" /></a></Tooltip> : null
+            }
+
+        </Spin>
+    }
+}
 class Status extends React.Component {
     constructor(props) {
         super(props);
@@ -236,6 +302,8 @@ class Power extends React.Component {
             apiChecked = props.apis.split(",");
         }
         this.state = Object.assign({ form: false, modalLoading: false, allPower: allPower, apiList: [], apiChecked: apiChecked, currentPage: 1, apiTotal: 0, apiLoading: false }, props);
+        console.log(this.state);
+        console.log(props);
         this.LoadNextPage = this.LoadNextPage.bind(this);
         this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
@@ -281,6 +349,7 @@ class Power extends React.Component {
             apis = this.state.apiChecked.join(",");
         }
         this.setState({ modalLoading: true, apiLoading: true });
+        //console.log(this.state.apiChecked);
         let response = await bus.Execute("apibus.app.power.update", {
             app: this.state.appkey,
             powers: apis
@@ -592,6 +661,9 @@ class App extends React.Component {
                 <Table.Column title="app key" key="appkey" dataIndex="appkey" />
                 <Table.Column title="密钥" key="secret" dataIndex="secret"
                     render={(secret, row) => <Secret visible={false} value={secret} appkey={row.appkey} />}
+                />
+                <Table.Column title="安全码" key="securty_code" dataIndex="securty_code"
+                    render={(securty_code, row) => <SecurtyCode visible={false} value={securty_code} appkey={row.appkey} />}
                 />
                 <Table.Column title="状态" key="status" dataIndex="status"
                     render={(status, row, _index) => <Status checked={status == "enable"} appkey={row.appkey} onChange={(checked) => {

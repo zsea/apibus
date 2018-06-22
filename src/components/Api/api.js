@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { bus } from '../../common/apibus'
-import { Table, Button, Icon, Modal, Form, Input, Divider, Popconfirm, Switch, Select, Checkbox, InputNumber, Row, Col } from 'antd';
+import { Table,Tag, Button, Icon, Modal, Form, Input, Divider, Popconfirm, Switch, Select, Checkbox, InputNumber, Row, Col } from 'antd';
 const formItemLayout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 16 }
@@ -157,6 +157,17 @@ const ApiForm = Form.create()(class extends React.Component {
                                     initialValue: this.state.initValue["status"]
                                 })(
                                     <Checkbox>启用</Checkbox>
+                                )}
+                            </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                            <Form.Item>
+                                {getFieldDecorator('need_securty', {
+                                    rules: [],
+                                    valuePropName: "checked",
+                                    initialValue: this.state.initValue["need_securty"]
+                                })(
+                                    <Checkbox>高危</Checkbox>
                                 )}
                             </Form.Item>
                         </Col>
@@ -659,6 +670,7 @@ class Api extends React.Component {
                             status: values["status"] === true ? "enable" : "disabled",
                             groupid: values["groupid"],
                             must_session: values["must_session"],
+                            need_securty: values["need_securty"],
                             envid: values["envid"],
                             url: values["url"],
                             desc: values["desc"]
@@ -717,7 +729,12 @@ class Api extends React.Component {
                 }}
                 expandedRowRender={(record) => <Arguments api={record.method} id={record.id} />}
             >
-                <Table.Column title="接口" key="method" dataIndex="method" />
+                <Table.Column title="接口" key="method" dataIndex="method" render={(m,row,_index)=>{
+                    if(!row.need_securty){
+                        return m;
+                    }
+                    return <span><Tag color="#f50">高</Tag> {m}</span>;
+                }} />
                 <Table.Column title="状态" key="status" dataIndex="status"
                     filters={[{ text: "全部", value: "all" }, { text: "启用", value: "enable" }, { text: "禁用", value: "disabled" }]}
                     filterMultiple={false}
@@ -795,6 +812,7 @@ class Api extends React.Component {
                                         url: row.handler.value
                                         , desc: row.desc
                                         , must_session: row.must_session
+                                        , need_securty: row.need_securty
                                         , status: row.status == "enable"
                                     }} onCancel={() => {
                                         this.setState({ form: null })
@@ -805,6 +823,7 @@ class Api extends React.Component {
                                             status: values["status"] === true ? "enable" : "disabled",
                                             groupid: values["groupid"],
                                             must_session: !!values["must_session"],
+                                            need_securty: !!values["need_securty"],
                                             envid: values["envid"],
                                             url: values["url"],
                                             desc: values["desc"]
