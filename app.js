@@ -252,6 +252,7 @@ app.use(async function (ctx, next) {
         return;
     }
     var apiinfo = await memory.get_method(api_method);
+    logger.debug("apiinfo",apiinfo)
     if (!apiinfo) {
         ctx.body = { error_response: { code: 22, msg: 'Invalid Method' } };
         return;
