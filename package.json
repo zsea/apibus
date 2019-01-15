@@ -1,6 +1,6 @@
 {
   "name": "node-apibus",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "APIBus Node实现的SDK",
   "main": "index.js",
   "scripts": {

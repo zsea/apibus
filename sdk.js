@@ -79,7 +79,7 @@ function ApiBus(appkey, secret, url) {
         }
         kv = kv.sort();
         var s = kv.join('&') + secret;
-        console.log(s);
+        //console.log(s);
         options['signature'] = md5(s);
         return options;
     }
